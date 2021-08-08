@@ -1,0 +1,2112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="MongoDB" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="databaseName" elementType="Argument">
+            <stringProp name="Argument.name">databaseName</stringProp>
+            <stringProp name="Argument.value">Bank</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="customersCollectionName" elementType="Argument">
+            <stringProp name="Argument.name">customersCollectionName</stringProp>
+            <stringProp name="Argument.value">Customers</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="uri" elementType="Argument">
+            <stringProp name="Argument.name">uri</stringProp>
+            <stringProp name="Argument.value">mongodb+srv://jmeter:jmeter@bank-operations.ii7y9.mongodb.net/Bank?retryWrites=true&amp;w=majority</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Create Connections" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Create connection" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+
+import java.time.*;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+
+try {
+
+	MongoClient mongoClient = MongoClients.create(vars.get(&quot;uri&quot;));
+	
+	MongoDatabase database = mongoClient.getDatabase(vars.get(&quot;databaseName&quot;));
+	props.put(&quot;database&quot;, database);
+	return &quot;connected to database&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CleanUp" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="CleanUp Database" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoDatabase db =  props.get(&quot;database&quot;);
+	MongoCollection&lt;Document&gt; customersCollection = db.getCollection(vars.get(&quot;customersCollectionName&quot;));
+	customersCollection.drop();
+	db.createCollection(vars.get(&quot;customersCollectionName&quot;));
+
+	return &quot;collection cleaned&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="100 Iterations" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">100</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">New Customers &amp; Accounts</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Data" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+
+import org.bson.Document;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+
+try {
+	
+	List&lt;String&gt; FIRSTNAMES = Arrays.asList(&quot;Marie&quot;,&quot;Paul&quot;,&quot;Sophie&quot;,&quot;Alexander&quot;,&quot;Maximilian&quot;,&quot;Elias&quot;,&quot;Emilia&quot;,&quot;Emma&quot;,&quot;Noah&quot;,&quot;Louis&quot;,&quot;Hannah&quot;,&quot;Leon&quot;,&quot;Mia&quot;,&quot;Ben&quot;,&quot;Anna&quot;,&quot;Henry&quot;,&quot;Charlotte&quot;,&quot;Emil&quot;);
+    	List&lt;String&gt; LASTNAMES= Arrays.asList(&quot;Müller&quot;,&quot;Schmidt&quot;,&quot;Schneider&quot;,&quot;Fischer&quot;,&quot;Weber&quot;,&quot;Meyer&quot;,&quot;Wagner&quot;,&quot;Becker&quot;,&quot;Schulz&quot;,&quot;Hoffmann&quot;,&quot;Schäfer&quot;,&quot;Bauer&quot;);
+    	List&lt;String&gt; STREETS = Arrays.asList(&quot;Haupstraße&quot;,&quot;Schulstraße&quot;,&quot;Dorfstraße&quot;,&quot;Gartenstraße&quot;,&quot;Bahnhofstraße&quot;,&quot;Mönckebergstraße&quot;,&quot;Kirchgasse&quot;,&quot;Karolinenstraße&quot;,&quot;Königstraße&quot;);
+    	List&lt;String&gt; CITIES = Arrays.asList(&quot;Berlin&quot;,&quot;Hamburg&quot;,&quot;München&quot;,&quot;Köln&quot;,&quot;Frankfurt am Main&quot;,&quot;Stuttgart&quot;,&quot;Düsseldorf&quot;,&quot;Leipzig&quot;,&quot;Dortmund&quot;,&quot;Essen&quot;,&quot;Bremen&quot;,&quot;Hannover&quot;);
+   	List&lt;String&gt; CUSTOMER_TYPES= Arrays.asList(&quot;PERSONAL&quot;,&quot;LEGAL_ENTITY&quot;);
+   	List&lt;String&gt; ACCOUNT_TYPES= Arrays.asList(&quot;CHECKING&quot;,&quot;SAVINGS&quot;,&quot;IRA&quot;,&quot;BROKERAGE&quot;,&quot;MONEY_MARKET_DEPOSIT&quot;,&quot;CERTIFICATE_OF_DEPOSIT&quot;);
+ 	
+ 	var random = new Random();
+ 	var firstname = FIRSTNAMES.get(random.nextInt(FIRSTNAMES.size()));
+ 	var lastname = LASTNAMES.get(random.nextInt(LASTNAMES.size()));
+
+ 	 var startDate = LocalDate.of(2010, Month.JANUARY, 1);
+      var endDate = LocalDate.of(2021, Month.JULY, 31);
+      var days = ChronoUnit.DAYS.between(startDate, endDate);
+      var date = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime datetime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+
+	var startBirthDate = LocalDate.of(1950, Month.JANUARY, 1);
+      var endBirthDate = LocalDate.of(2015, Month.DECEMBER, 31);
+      var daysBirth = ChronoUnit.DAYS.between(startBirthDate, endBirthDate);
+      var dateBirth = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime birthdatetime = LocalDateTime.of(dateBirth, LocalTime.MIDNIGHT);
+
+
+
+	var account = new Document()
+	.append(&quot;_id&quot;, UUID.randomUUID())
+	.append(&quot;accountType&quot;, ACCOUNT_TYPES.get(random.nextInt(ACCOUNT_TYPES.size())))
+	.append(&quot;isValid&quot;, true)
+	.append(&quot;balance&quot;, BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime.plusMinutes(5))
+	.append(&quot;transactions&quot;, Collections.emptyList());
+	vars.putObject(&quot;account&quot;, account);
+	
+	var customer = new Document()
+	.append(&quot;_id&quot;,UUID.randomUUID())
+	.append(&quot;firstname&quot;, firstname)
+	.append(&quot;lastname&quot;,lastname)
+	.append(&quot;customerType&quot;, CUSTOMER_TYPES.get(random.nextInt(CUSTOMER_TYPES.size())))
+	.append(&quot;birthdate&quot;, birthdatetime)
+	.append(&quot;street&quot;, STREETS.get(random.nextInt(STREETS.size())))
+	.append(&quot;houseNumber&quot;, String.valueOf(random.nextInt(100)))
+	.append(&quot;city&quot;, CITIES.get(random.nextInt(CITIES.size())))
+	.append(&quot;zipCode&quot;,String.valueOf(10000 + random.nextInt(20000)))
+	.append(&quot;country&quot;,&quot;Germany&quot;)
+	.append(&quot;email&quot;, String.format(&quot;%s.%s@mail.com&quot;,firstname, lastname))
+	.append(&quot;phoneNumber&quot;,String.format(&quot;0%s&quot;,ThreadLocalRandom.current().nextInt(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime)
+	.append(&quot;accounts&quot;, Collections.emptyList());;
+	vars.putObject(&quot;customer&quot;, customer);
+
+	return &quot;Customer: &quot; + customer + &quot; Account: &quot; + account;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoInsertCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	var customer = vars.getObject(&quot;customer&quot;);
+	collection.insertOne(customer);
+	return &quot;Customer inserted: &quot; + customer;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Insert a new customer in the collection</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoUpdateCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	
+	return collection.updateOne( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate)), 
+		push(&quot;accounts&quot;, vars.getObject(&quot;account&quot;))
+		);
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Add the new account to the customer&apos;s profile</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoReadCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	
+	List&lt;Document&gt; results = collection.find( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate))).into(new ArrayList&lt;Document&gt;());
+	return results;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 100 Iterations" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CleanUp" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="CleanUp Database" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoDatabase db =  props.get(&quot;database&quot;);
+	MongoCollection&lt;Document&gt; customersCollection = db.getCollection(vars.get(&quot;customersCollectionName&quot;));
+	customersCollection.drop();
+	db.createCollection(vars.get(&quot;customersCollectionName&quot;));
+
+	return &quot;collection cleaned&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="500 Iterations" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">500</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">New Customers &amp; Accounts</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Data" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+
+import org.bson.Document;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+
+try {
+	
+	List&lt;String&gt; FIRSTNAMES = Arrays.asList(&quot;Marie&quot;,&quot;Paul&quot;,&quot;Sophie&quot;,&quot;Alexander&quot;,&quot;Maximilian&quot;,&quot;Elias&quot;,&quot;Emilia&quot;,&quot;Emma&quot;,&quot;Noah&quot;,&quot;Louis&quot;,&quot;Hannah&quot;,&quot;Leon&quot;,&quot;Mia&quot;,&quot;Ben&quot;,&quot;Anna&quot;,&quot;Henry&quot;,&quot;Charlotte&quot;,&quot;Emil&quot;);
+    	List&lt;String&gt; LASTNAMES= Arrays.asList(&quot;Müller&quot;,&quot;Schmidt&quot;,&quot;Schneider&quot;,&quot;Fischer&quot;,&quot;Weber&quot;,&quot;Meyer&quot;,&quot;Wagner&quot;,&quot;Becker&quot;,&quot;Schulz&quot;,&quot;Hoffmann&quot;,&quot;Schäfer&quot;,&quot;Bauer&quot;);
+    	List&lt;String&gt; STREETS = Arrays.asList(&quot;Haupstraße&quot;,&quot;Schulstraße&quot;,&quot;Dorfstraße&quot;,&quot;Gartenstraße&quot;,&quot;Bahnhofstraße&quot;,&quot;Mönckebergstraße&quot;,&quot;Kirchgasse&quot;,&quot;Karolinenstraße&quot;,&quot;Königstraße&quot;);
+    	List&lt;String&gt; CITIES = Arrays.asList(&quot;Berlin&quot;,&quot;Hamburg&quot;,&quot;München&quot;,&quot;Köln&quot;,&quot;Frankfurt am Main&quot;,&quot;Stuttgart&quot;,&quot;Düsseldorf&quot;,&quot;Leipzig&quot;,&quot;Dortmund&quot;,&quot;Essen&quot;,&quot;Bremen&quot;,&quot;Hannover&quot;);
+   	List&lt;String&gt; CUSTOMER_TYPES= Arrays.asList(&quot;PERSONAL&quot;,&quot;LEGAL_ENTITY&quot;);
+   	List&lt;String&gt; ACCOUNT_TYPES= Arrays.asList(&quot;CHECKING&quot;,&quot;SAVINGS&quot;,&quot;IRA&quot;,&quot;BROKERAGE&quot;,&quot;MONEY_MARKET_DEPOSIT&quot;,&quot;CERTIFICATE_OF_DEPOSIT&quot;);
+ 	
+ 	var random = new Random();
+ 	var firstname = FIRSTNAMES.get(random.nextInt(FIRSTNAMES.size()));
+ 	var lastname = LASTNAMES.get(random.nextInt(LASTNAMES.size()));
+
+ 	var startDate = LocalDate.of(2010, Month.JANUARY, 1);
+      var endDate = LocalDate.of(2021, Month.JULY, 31);
+      var days = ChronoUnit.DAYS.between(startDate, endDate);
+      var date = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime datetime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+
+	var startBirthDate = LocalDate.of(1950, Month.JANUARY, 1);
+      var endBirthDate = LocalDate.of(2015, Month.DECEMBER, 31);
+      var daysBirth = ChronoUnit.DAYS.between(startBirthDate, endBirthDate);
+      var dateBirth = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime birthdatetime = LocalDateTime.of(dateBirth, LocalTime.MIDNIGHT);
+
+
+	var account = new Document()
+	.append(&quot;_id&quot;, UUID.randomUUID())
+	.append(&quot;accountType&quot;, ACCOUNT_TYPES.get(random.nextInt(ACCOUNT_TYPES.size())))
+	.append(&quot;isValid&quot;, true)
+	.append(&quot;balance&quot;, BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime.plusMinutes(5))
+	.append(&quot;transactions&quot;, Collections.emptyList());
+	vars.putObject(&quot;account&quot;, account);
+	
+	var customer = new Document()
+	.append(&quot;_id&quot;,UUID.randomUUID())
+	.append(&quot;firstname&quot;, firstname)
+	.append(&quot;lastname&quot;,lastname)
+	.append(&quot;customerType&quot;, CUSTOMER_TYPES.get(random.nextInt(CUSTOMER_TYPES.size())))
+	.append(&quot;birthdate&quot;, birthdatetime)
+	.append(&quot;street&quot;, STREETS.get(random.nextInt(STREETS.size())))
+	.append(&quot;houseNumber&quot;, String.valueOf(random.nextInt(100)))
+	.append(&quot;city&quot;, CITIES.get(random.nextInt(CITIES.size())))
+	.append(&quot;zipCode&quot;,String.valueOf(10000 + random.nextInt(20000)))
+	.append(&quot;country&quot;,&quot;Germany&quot;)
+	.append(&quot;email&quot;, String.format(&quot;%s.%s@mail.com&quot;,firstname, lastname))
+	.append(&quot;phoneNumber&quot;,String.format(&quot;0%s&quot;,ThreadLocalRandom.current().nextInt(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime)
+	.append(&quot;accounts&quot;, Collections.emptyList());;
+	vars.putObject(&quot;customer&quot;, customer);
+
+	return &quot;Customer: &quot; + customer + &quot; Account: &quot; + account;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoInsertCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	var customer = vars.getObject(&quot;customer&quot;);
+	collection.insertOne(customer);
+	return &quot;Customer inserted: &quot; + customer;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Insert a new customer in the collection</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoUpdateCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	collection.updateOne( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate)), 
+		push(&quot;accounts&quot;, vars.getObject(&quot;account&quot;))
+		);
+	return &quot;Customer updated with account&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Add the new account to the customer&apos;s profile</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoReadCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	
+	List&lt;Document&gt; results = collection.find( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate))).into(new ArrayList&lt;Document&gt;());
+	return results;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 500 Iterations" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CleanUp" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="CleanUp Database" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoDatabase db =  props.get(&quot;database&quot;);
+	MongoCollection&lt;Document&gt; customersCollection = db.getCollection(vars.get(&quot;customersCollectionName&quot;));
+	customersCollection.drop();
+	db.createCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	return &quot;collection cleaned&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="100 Users &amp; 100 Iterations" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">100</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">New Customers &amp; Accounts</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Generate Data" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+
+import org.bson.Document;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+
+try {
+	
+	List&lt;String&gt; FIRSTNAMES = Arrays.asList(&quot;Marie&quot;,&quot;Paul&quot;,&quot;Sophie&quot;,&quot;Alexander&quot;,&quot;Maximilian&quot;,&quot;Elias&quot;,&quot;Emilia&quot;,&quot;Emma&quot;,&quot;Noah&quot;,&quot;Louis&quot;,&quot;Hannah&quot;,&quot;Leon&quot;,&quot;Mia&quot;,&quot;Ben&quot;,&quot;Anna&quot;,&quot;Henry&quot;,&quot;Charlotte&quot;,&quot;Emil&quot;);
+    	List&lt;String&gt; LASTNAMES= Arrays.asList(&quot;Müller&quot;,&quot;Schmidt&quot;,&quot;Schneider&quot;,&quot;Fischer&quot;,&quot;Weber&quot;,&quot;Meyer&quot;,&quot;Wagner&quot;,&quot;Becker&quot;,&quot;Schulz&quot;,&quot;Hoffmann&quot;,&quot;Schäfer&quot;,&quot;Bauer&quot;);
+    	List&lt;String&gt; STREETS = Arrays.asList(&quot;Haupstraße&quot;,&quot;Schulstraße&quot;,&quot;Dorfstraße&quot;,&quot;Gartenstraße&quot;,&quot;Bahnhofstraße&quot;,&quot;Mönckebergstraße&quot;,&quot;Kirchgasse&quot;,&quot;Karolinenstraße&quot;,&quot;Königstraße&quot;);
+    	List&lt;String&gt; CITIES = Arrays.asList(&quot;Berlin&quot;,&quot;Hamburg&quot;,&quot;München&quot;,&quot;Köln&quot;,&quot;Frankfurt am Main&quot;,&quot;Stuttgart&quot;,&quot;Düsseldorf&quot;,&quot;Leipzig&quot;,&quot;Dortmund&quot;,&quot;Essen&quot;,&quot;Bremen&quot;,&quot;Hannover&quot;);
+   	List&lt;String&gt; CUSTOMER_TYPES= Arrays.asList(&quot;PERSONAL&quot;,&quot;LEGAL_ENTITY&quot;);
+   	List&lt;String&gt; ACCOUNT_TYPES= Arrays.asList(&quot;CHECKING&quot;,&quot;SAVINGS&quot;,&quot;IRA&quot;,&quot;BROKERAGE&quot;,&quot;MONEY_MARKET_DEPOSIT&quot;,&quot;CERTIFICATE_OF_DEPOSIT&quot;);
+ 	
+ 	var random = new Random();
+ 	var firstname = FIRSTNAMES.get(random.nextInt(FIRSTNAMES.size()));
+ 	var lastname = LASTNAMES.get(random.nextInt(LASTNAMES.size()));
+
+ 	var startDate = LocalDate.of(2010, Month.JANUARY, 1);
+      var endDate = LocalDate.of(2021, Month.JULY, 31);
+      var days = ChronoUnit.DAYS.between(startDate, endDate);
+      var date = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime datetime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+
+	var startBirthDate = LocalDate.of(1950, Month.JANUARY, 1);
+      var endBirthDate = LocalDate.of(2015, Month.DECEMBER, 31);
+      var daysBirth = ChronoUnit.DAYS.between(startBirthDate, endBirthDate);
+      var dateBirth = startDate.plusDays(new Random().nextInt( (int) days + 1));
+ 	LocalDateTime birthdatetime = LocalDateTime.of(dateBirth, LocalTime.MIDNIGHT);
+
+
+	var account = new Document()
+	.append(&quot;_id&quot;, UUID.randomUUID())
+	.append(&quot;accountType&quot;, ACCOUNT_TYPES.get(random.nextInt(ACCOUNT_TYPES.size())))
+	.append(&quot;isValid&quot;, true)
+	.append(&quot;balance&quot;, BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime.plusMinutes(5))
+	.append(&quot;transactions&quot;, Collections.emptyList());
+	vars.putObject(&quot;account&quot;, account);
+	
+	var customer = new Document()
+	.append(&quot;_id&quot;,UUID.randomUUID())
+	.append(&quot;firstname&quot;, firstname)
+	.append(&quot;lastname&quot;,lastname)
+	.append(&quot;customerType&quot;, CUSTOMER_TYPES.get(random.nextInt(CUSTOMER_TYPES.size())))
+	.append(&quot;birthdate&quot;, birthdatetime)
+	.append(&quot;street&quot;, STREETS.get(random.nextInt(STREETS.size())))
+	.append(&quot;houseNumber&quot;, String.valueOf(random.nextInt(100)))
+	.append(&quot;city&quot;, CITIES.get(random.nextInt(CITIES.size())))
+	.append(&quot;zipCode&quot;,String.valueOf(10000 + random.nextInt(20000)))
+	.append(&quot;country&quot;,&quot;Germany&quot;)
+	.append(&quot;email&quot;, String.format(&quot;%s.%s@mail.com&quot;,firstname, lastname))
+	.append(&quot;phoneNumber&quot;,String.format(&quot;0%s&quot;,ThreadLocalRandom.current().nextInt(1000000000,1999999999 )))
+	.append(&quot;creationTime&quot;, datetime)
+	.append(&quot;accounts&quot;, Collections.emptyList());;
+	vars.putObject(&quot;customer&quot;, customer);
+
+	return &quot;Customer: &quot; + customer + &quot; Account: &quot; + account;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoInsertCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import org.bson.Document;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	var customer = vars.getObject(&quot;customer&quot;);
+	collection.insertOne(customer);
+	return &quot;Customer inserted: &quot; + customer;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Insert a new customer in the collection</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoUpdateCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	collection.updateOne( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate)), 
+		push(&quot;accounts&quot;, vars.getObject(&quot;account&quot;))
+		);
+	return &quot;Customer updated with account&quot;;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+          <stringProp name="TestPlan.comments">Add the new account to the customer&apos;s profile</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MongoReadCustomerOperation" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
+
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+try {
+
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+	
+	var insertedDocument = vars.getObject(&quot;customer&quot;);
+	var firstname = insertedDocument.get(&quot;firstname&quot;);
+	var lastname = insertedDocument.get(&quot;lastname&quot;);
+	var birthdate = insertedDocument.get(&quot;birthdate&quot;);
+
+	
+	List&lt;Document&gt; results = collection.find( 
+		and(eq(&quot;firstname&quot;, firstname), eq(&quot;lastname&quot;, lastname), eq(&quot;birthdate&quot;, birthdate))).into(new ArrayList&lt;Document&gt;());
+	return results;
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e);
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 100 Users &amp; 100 Iterations" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="100 Users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">Update Accounts &amp; insert transactions </stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="UpdateAccounts" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Updates.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.*;
+ import com.mongodb.MongoClient;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+
+	List&lt;String&gt; TRANSACTION_TYPES= Arrays.asList(&quot;CHECK&quot;,&quot;ATM&quot;,&quot;CHARGE&quot;,&quot;DEPOSIT&quot;,&quot;ONLINE&quot;,&quot;POS&quot;, &quot;TRANSFER&quot;, &quot;WITHDRAWAL&quot;);
+
+	var random = new Random();
+
+	Document customer = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountCustomer = customer.get(&quot;accounts&quot;).get(0);
+	
+	Document merchant = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountMerchant = merchant.get(&quot;accounts&quot;).get(0);
+
+	BigDecimal amount = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(0.1, accountCustomer.get(&quot;balance&quot;).doubleValue()));
+	var transactionType = TRANSACTION_TYPES.get(random.nextInt(TRANSACTION_TYPES.size()));
+	
+	var transactionCustomer = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberCustomer&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberMerchant&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount.negate())
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+	
+	var transactionMerchant = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberMerchant&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberCustomer&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount)
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+
+	BigDecimal customerBalance = accountCustomer.get(&quot;balance&quot;);
+	BigDecimal merchantBalance = accountMerchant.get(&quot;balance&quot;);
+	
+	//update customer
+	collection.updateOne( 
+		and(eq(&quot;_id&quot;, customer.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountCustomer.get(&quot;_id&quot;))),
+		combine(set(&quot;accounts.0.balance&quot;, customerBalance.add(amount.negate())), push(&quot;accounts.0.transactions&quot;, transactionCustomer))
+		);
+	
+	//update merchant
+	return collection.updateOne( 
+		and(eq(&quot;_id&quot;, merchant.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountMerchant.get(&quot;_id&quot;))), 
+		combine(set(&quot;accounts.0.balance&quot;, merchantBalance.add(amount)), push(&quot;accounts.0.transactions&quot;, transactionMerchant))
+		);
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e + &quot; Cause:&quot; + e.getCause());
+
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 100 Users" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="250 Users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">250</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="UpdateAccounts" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Updates.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.*;
+ import com.mongodb.MongoClient;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+
+	List&lt;String&gt; TRANSACTION_TYPES= Arrays.asList(&quot;CHECK&quot;,&quot;ATM&quot;,&quot;CHARGE&quot;,&quot;DEPOSIT&quot;,&quot;ONLINE&quot;,&quot;POS&quot;, &quot;TRANSFER&quot;, &quot;WITHDRAWAL&quot;);
+
+	var random = new Random();
+
+	Document customer = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountCustomer = customer.get(&quot;accounts&quot;).get(0);
+	
+	Document merchant = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountMerchant = merchant.get(&quot;accounts&quot;).get(0);
+
+	BigDecimal amount = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(0.1, accountCustomer.get(&quot;balance&quot;).doubleValue()));
+	var transactionType = TRANSACTION_TYPES.get(random.nextInt(TRANSACTION_TYPES.size()));
+	
+	var transactionCustomer = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberCustomer&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberMerchant&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount.negate())
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+	
+	var transactionMerchant = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberMerchant&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberCustomer&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount)
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+
+	BigDecimal customerBalance = accountCustomer.get(&quot;balance&quot;);
+	BigDecimal merchantBalance = accountMerchant.get(&quot;balance&quot;);
+	
+	//update customer
+	collection.updateOne( 
+		and(eq(&quot;_id&quot;, customer.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountCustomer.get(&quot;_id&quot;))),
+		combine(set(&quot;accounts.0.balance&quot;, customerBalance.add(amount.negate())), push(&quot;accounts.0.transactions&quot;, transactionCustomer))
+		);
+	
+	//update merchant
+	return collection.updateOne( 
+		and(eq(&quot;_id&quot;, merchant.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountMerchant.get(&quot;_id&quot;))), 
+		combine(set(&quot;accounts.0.balance&quot;, merchantBalance.add(amount)), push(&quot;accounts.0.transactions&quot;, transactionMerchant))
+		);
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e + &quot; Cause:&quot; + e.getCause());
+
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 250 Users" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="500 Users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">500</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="UpdateAccounts" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Updates.*;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.mongodb.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.*;
+ import com.mongodb.MongoClient;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+
+try {
+	MongoCollection&lt;Document&gt; collection = props.get(&quot;database&quot;).getCollection(vars.get(&quot;customersCollectionName&quot;));
+
+	List&lt;String&gt; TRANSACTION_TYPES= Arrays.asList(&quot;CHECK&quot;,&quot;ATM&quot;,&quot;CHARGE&quot;,&quot;DEPOSIT&quot;,&quot;ONLINE&quot;,&quot;POS&quot;, &quot;TRANSFER&quot;, &quot;WITHDRAWAL&quot;);
+
+	var random = new Random();
+
+	Document customer = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountCustomer = customer.get(&quot;accounts&quot;).get(0);
+	
+	Document merchant = collection.aggregate(Arrays.asList(sample(1))).first();
+	Document accountMerchant = merchant.get(&quot;accounts&quot;).get(0);
+
+	BigDecimal amount = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(0.1, accountCustomer.get(&quot;balance&quot;).doubleValue()));
+	var transactionType = TRANSACTION_TYPES.get(random.nextInt(TRANSACTION_TYPES.size()));
+	
+	var transactionCustomer = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberCustomer&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberMerchant&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount.negate())
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+	
+	var transactionMerchant = new Document()
+		.append(&quot;_id&quot;, UUID.randomUUID())
+		.append(&quot;transactionType&quot;, &quot;ONLINE&quot;)
+		.append(&quot;accountNumberMerchant&quot;, accountCustomer.get(&quot;_id&quot;))
+		.append(&quot;accountNumberCustomer&quot;, accountMerchant.get(&quot;_id&quot;))
+		.append(&quot;amount&quot;, amount)
+		.append(&quot;details&quot;, &quot;&quot;)
+		.append(&quot;transactionTime&quot;, LocalDateTime.now());
+
+	BigDecimal customerBalance = accountCustomer.get(&quot;balance&quot;);
+	BigDecimal merchantBalance = accountMerchant.get(&quot;balance&quot;);
+	
+	//update customer
+	collection.updateOne( 
+		and(eq(&quot;_id&quot;, customer.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountCustomer.get(&quot;_id&quot;))),
+		combine(set(&quot;accounts.0.balance&quot;, customerBalance.add(amount.negate())), push(&quot;accounts.0.transactions&quot;, transactionCustomer))
+		);
+	
+	//update merchant
+	return collection.updateOne( 
+		and(eq(&quot;_id&quot;, merchant.get(&quot;_id&quot;)), eq(&quot;accounts._id&quot;, accountMerchant.get(&quot;_id&quot;))), 
+		combine(set(&quot;accounts.0.balance&quot;, merchantBalance.add(amount)), push(&quot;accounts.0.transactions&quot;, transactionMerchant))
+		);
+	
+}
+catch (Exception e) {
+	SampleResult.setSuccessful(false);
+	SampleResult.setResponseCode(&quot;500&quot;);
+	SampleResult.setResponseMessage(&quot;Exception: &quot; + e + &quot; Cause:&quot; + e.getCause());
+
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report for 500 Users" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
